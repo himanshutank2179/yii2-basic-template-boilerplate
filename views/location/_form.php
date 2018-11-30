@@ -141,12 +141,6 @@ use app\helper\AppHelper;
 
 <?php
 $this->registerJs("
-    // $('#copt-btn').click({
-    //     console.log('aaa');
-    //     let ctime = $('#location-day_start_time').val();
-    //     $('#location-day_end_time').val(ctime);
-    // });
-
     $('.copy-time').click(function (e)
     {
         e.preventDefault(e);

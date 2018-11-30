@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\TicketValues;
 use app\models\TicketValuesSearch;
+use app\models\Location;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -128,5 +129,25 @@ class TicketValuesController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionGetLocationData($location_id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $location_data = Location::find()->where(['location_id' => $location_id])->one();
+
+        if($location_data->hour == 0 && $location_data->minute == 0)
+        {
+            return $location_data;
+        }
+        else
+        {
+            $data = "No Data";
+            return $data;
+        }
+
+        return 0;
+
+        //return Location::find()->where(['location_id' => $location_id])->one();
     }
 }

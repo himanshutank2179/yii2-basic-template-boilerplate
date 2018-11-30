@@ -91,7 +91,8 @@ class WsController extends Controller
             foreach ($tickets as $key => $ticket) {
                 $d['location_id'] = $ticket->location->location_id;
                 $d['location_name'] = $ticket->location->location_name;
-                $d['location_duration'] = $ticket->location->location_duration;
+                $d['hour'] = $ticket->location->hour;
+                $d['minute'] = $ticket->location->minute;
                 $d['day_start_time'] = $ticket->location->day_start_time;
                 $d['day_end_time'] = $ticket->location->day_end_time;
                 $d['location_image'] = !empty($ticket->location->location_image) ? Yii::$app->urlManager->createAbsoluteUrl('uploads/' . $ticket->location->location_image) : '';

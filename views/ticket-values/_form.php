@@ -43,3 +43,46 @@ use dosamigos\datetimepicker\DateTimePicker;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$spurl = \yii\helpers\Url::toRoute('get-location-data', true);
+$this->registerJs("
+    $('#ticketvalues-location_id').on('change',function()
+        {
+            var lid = $('#ticketvalues-location_id').find(':selected').val();
+            if(lid == '')
+            {
+                alert('please Select Location');
+            }
+            else
+            {
+                $.ajax(
+                {
+                    url: '$spurl',
+                    type: 'GET', 
+                    data:
+                    {
+                        location_id: lid,
+                    },
+                    success: function(response)
+                    {
+                        if(response == false || response == 0)
+                        {
+                            $('#ticketvalues-time').prop('disabled', false);
+                            console.log(response);
+                        }
+                        else
+                        {
+                            $('#ticketvalues-time').val(response.day_start_time);
+                            $('#ticketvalues-time').prop('disabled', true);
+                            //console.log(response);
+                        }
+                    },
+                    error: function(xhr)
+                    {
+                        //Do Something to handle error
+                    }
+                }); 
+            }
+        });
+", \yii\web\View::POS_END);
+?>
