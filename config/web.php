@@ -78,3 +78,13 @@ if (YII_ENV_DEV) {
 }
 
 return $config;
+
+function addMinutesToTime( $time, $plusMinutes, $plusHours ) {
+
+    $time = DateTime::createFromFormat( 'H:i:s', $time );
+    $time->add( new DateInterval( 'PT' . ( (integer) $plusHours ) . 'H' ) );
+    $time->add( new DateInterval( 'PT' . ( (integer) $plusMinutes ) . 'M' ) );
+    $newTime = $time->format( 'H:i:s' );
+ 
+    return $newTime;
+ }

@@ -1,7 +1,7 @@
 <div class="row">
 	<?php
 	// echo "<pre>";
-	// print_r($location_data);
+	// print_r($location_data);	
 
 	foreach ($location_data as $key => $location): ?>
 		<div class="col-md-4">

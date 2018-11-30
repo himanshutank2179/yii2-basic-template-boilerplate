@@ -172,4 +172,11 @@ class WsController extends Controller
             return ['status' => 404, 'data' => 'No Data Found.'];
         }
     }
+
+
+
+    public function actionGetTimeSlots()
+    {
+        
+    }
 }
