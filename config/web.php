@@ -88,3 +88,10 @@ function addMinutesToTime( $time, $plusMinutes, $plusHours ) {
  
     return $newTime;
  }
+
+function p( $data ) {
+
+    echo '<pre>';
+    print_r($data);
+    exit();
+}
