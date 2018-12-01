@@ -13,9 +13,12 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             <P><label>Location : </label><label><?= $location['location_name'] ?></label></P>
-                            <P><label>Date : </label><label><?= $location['date'] ?></label></P>
-                            <P><label>Time : </label><label><?= $location['time'] ?></label></P>
-                            <P><label>Previous No : </label><label><?= $location['ticket_value'] ?></label></P>
+                            <div class="input-group input-group-sm">
+               <input type="text" class="form-control" placeholder="Add New number">
+                   <span class="input-group-btn">
+                     <button type="button" class="btn btn-info btn-flat">Add</button>
+                   </span>
+             </div>
                         </h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse">
