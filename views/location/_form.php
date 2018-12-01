@@ -87,43 +87,11 @@ use app\helper\AppHelper;
             </div>
             <?= $form->field($model, 'location_image')->hiddenInput()->label(false); ?>
 
-            <?= $form->field($model, 'day_start_time')->widget(DateTimePicker::className(), [
-                'language' => Yii::$app->language,
-                'size' => 'ms',
-                'template' => '{input}',
-                'pickButtonIcon' => 'glyphicon glyphicon-time',
-                // 'inline' => true,
-                'clientOptions' => [
-                    // 'autoclose' => true,
-                    'startView' => 1,
-                    'minView' => 0,
-                    'maxView' => 1,
-                    'autoclose' => true,
-                    //'linkFormat' => 'HH:ii P', // if inline = true
-                    'format' => 'h:i', // if inline = false
-                    'todayBtn' => true]
-                ]);
-            ?>
+            <?= $form->field($model, 'day_start_time')->dropDownList(AppHelper::getTime(), ['prompt'=> 'Select Time']); ?>
 
             <button class="btn-primary copy-time" >Copy Time</button>
 
-            <?= $form->field($model, 'day_end_time')->widget(DateTimePicker::className(), [
-                'language' => Yii::$app->language,
-                'size' => 'ms',
-                'template' => '{input}',
-                'pickButtonIcon' => 'glyphicon glyphicon-time',
-                // 'inline' => true,
-                'clientOptions' => [
-                    // 'autoclose' => true,
-                    'startView' => 1,
-                    'minView' => 0,
-                    'maxView' => 1,
-                    'autoclose' => true,
-                    //'linkFormat' => 'HH:ii P', // if inline = true
-                    'format' => 'h:i', // if inline = false
-                    'todayBtn' => true]
-                ]);
-            ?>
+            <?= $form->field($model, 'day_end_time')->dropDownList(AppHelper::getTime(), ['prompt'=> 'Select Time']); ?>
 
             <div class="form-group"><br>
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
