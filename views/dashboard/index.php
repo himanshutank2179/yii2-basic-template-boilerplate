@@ -107,7 +107,6 @@
     <?php endforeach; ?>
 </div>
 
-<<<<<<< HEAD
 <?php
 $spurl = \yii\helpers\Url::toRoute('single-data', true);
 $this->registerJs("
@@ -156,7 +155,6 @@ $this->registerJs("
         });
 ", \yii\web\View::POS_END);
 ?>
-=======
 
 <?php
 $this->registerJs('
@@ -182,4 +180,3 @@ $this->registerJs('
 
 ', \yii\web\View::POS_END);
 ?>
->>>>>>> 261d84db0925af90a7e255b224b5759a20279d65
