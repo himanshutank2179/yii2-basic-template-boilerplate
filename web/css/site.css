@@ -113,3 +113,8 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.widget-user-2 .widget-user-image>img {
+    min-height: 65px !important;
+    max-height: 65px !important;
+}
