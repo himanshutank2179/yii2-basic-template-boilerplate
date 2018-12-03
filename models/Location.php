@@ -61,6 +61,6 @@ class Location extends \yii\db\ActiveRecord
      */
     public function getTicketValues()
     {
-        return $this->hasMany(TicketValues::className(), ['location_id' => 'location_id']);
+        return $this->hasOne(TicketValues::className(), ['location_id' => 'location_id']);
     }
 }

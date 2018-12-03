@@ -118,3 +118,14 @@ a.desc:after {
     min-height: 65px !important;
     max-height: 65px !important;
 }
+.skin-blue .main-header .navbar {
+    background-color: #0073b7 !important;
+}
+/*.skin-blue .main-header .logo {
+    background-color: #367fa9;
+    color: #fff;
+    border-bottom: 0 solid transparent;
+}*/
+.skin-blue .main-header .logo {
+    background-color: #0073b7 !important;
+}

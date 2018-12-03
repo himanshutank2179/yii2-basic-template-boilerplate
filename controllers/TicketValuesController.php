@@ -142,8 +142,8 @@ class TicketValuesController extends Controller
         }
         else
         {
-            $data = "No Data";
-            return $data;
+            // $data = "No Data";
+            return 0;
         }
 
         return 0;

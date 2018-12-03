@@ -16,12 +16,12 @@
                     </div>
                     <!-- /.widget-user-image -->
                     <h3 class="widget-user-username"><?= $location['location_name'] ?></h3>
-                    <h5 class="widget-user-desc">Previous Number: 15</h5>
-                    <h5 class="widget-user-desc">Previous Time: some time goes</h5>
+                    <h5 class="widget-user-desc">Previous Number: <?=  $location['ticket_value']?></h5>
+                    <h5 class="widget-user-desc">Previous Time: <?=  $location['time']?></h5>
                 </div>
                 <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
-                        <li><a href="#">Next Upcomming Number time: time goes here</a></li>
+                        <li><a href="#">Next Upcomming Number time: <?=  $location['next_time']?></a></li>
                         <!--<li><a href="#">Tasks <span class="pull-right badge bg-aqua">5</span></a></li>
                         <li><a href="#">Completed Projects <span class="pull-right badge bg-green">12</span></a></li>
                         <li><a href="#">Followers <span class="pull-right badge bg-red">842</span></a></li>-->
