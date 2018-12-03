@@ -16,12 +16,12 @@
                     </div>
                     <!-- /.widget-user-image -->
                     <h3 class="widget-user-username"><?= $location['location_name'] ?></h3>
-                    <h5 class="widget-user-desc">Previous Number: <?=  $location['ticket_value']?></h5>
-                    <h5 class="widget-user-desc">Previous Time: <?=  $location['time']?></h5>
+                    <h5 class="widget-user-desc">Previous Number: <?= $location['ticket_value'] ?></h5>
+                    <h5 class="widget-user-desc">Previous Time: <?= $location['time'] ?></h5>
                 </div>
                 <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
-                        <li><a href="#">Next Upcomming Number time: <?=  $next_time = $location['next_time']?></a></li>
+                        <li><a href="#">Next Upcomming Number time: <?= $next_time = $location['next_time'] ?></a></li>
                         <!--<li><a href="#">Tasks <span class="pull-right badge bg-aqua">5</span></a></li>
                         <li><a href="#">Completed Projects <span class="pull-right badge bg-green">12</span></a></li>
                         <li><a href="#">Followers <span class="pull-right badge bg-red">842</span></a></li>-->
@@ -35,9 +35,12 @@
                                         <span for="number" class="small"> Enter Value </span>
                                         <div class="input-group input-group-sm">
 
-                                            <input type="text" id="location-id-<?= $location['location_id'] ?>"  class="form-control" placeholder="Add New number" required >
+                                            <input type="text" id="location-id-<?= $location['location_id'] ?>"
+                                                   class="form-control" placeholder="Add New number" required>
                                             <span class="input-group-btn">
-                                 <button type="submit" class="btn btn-info btn-flat single-data" data-value-time="<?= $location['next_time24']?>"" id="<?=$location['location_id']?>" data-location-id="<?= $location['location_id'] ?>">Add</button>
+                                 <button type="submit" class="btn btn-info btn-flat single-data"
+                                         data-value-time="<?= $location['next_time24'] ?>"" id="<?= $location['location_id'] ?>
+                                                " data-location-id="<?= $location['location_id'] ?>">Add</button>
                                </span>
                                         </div>
                                     </h3>
@@ -51,10 +54,23 @@
                                     <table class="table">
                                         <thead class="thead-dark">
                                         <tr>
+                                            <th>
+                                                <button class="btn btn-sm btn-primary"
+                                                        onclick='selectAll("<?= $location['location_id'] ?>")'>Select
+                                                    All
+                                                </button>
+                                                <button class="btn btn-sm btn-primary"
+                                                        onclick='UnSelectAll("<?= $location['location_id'] ?>")'>
+                                                    Unselect All
+                                                </button>
+
+                                            </th>
+
+                                        </tr>
+                                        <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Time</th>
                                             <th scope="col">Number</th>
-                                            <th scope="col"><button class="btn btn-sm btn-primary">Check All</button></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -72,8 +88,19 @@
                                             <tr>
                                                 <th scope="row"><?= $i ?></th>
                                                 <td><?= date("g:i a", strtotime($newTime)) ?></td>
-                                                <td><input type="text" class="form-control" name="location-value-" data-value-time="<?= $newTime ?>" data-location-id="<?= $location['location_id'] ?>"></td>
-                                                <td><center><input type="checkbox" name="location-checkbox-<?= $location['location_id'],$i ?>" ></center></td>
+                                                <td>
+                                                    <input
+                                                            type="text"
+                                                            class="form-control <?= $location['location_id']; ?>"
+                                                            name="location-value-"
+                                                            data-value-time="<?= $newTime ?>"
+                                                            data-location-id="<?= $location['location_id'] ?>"
+                                                    >
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox"
+                                                           name="<?= $location['location_id'] ?>">
+                                                </td>
                                             </tr>
                                             <?php if (date('H:i:s', strtotime($newTime)) < date('H:i:s', strtotime($end))): ?>
                                                 <?php $newTime = date('H:i:s', strtotime('+' . $durationH . ' hour +' . $durationM . ' minutes', strtotime($newTime))); ?>
@@ -86,7 +113,9 @@
                                         </tbody>
                                         <tfoot>
                                         <th>
-                                            <button class="btn btn-primary">Save All</button>
+                                            <button class="btn btn-primary add-all"
+                                                    data-example-id="<?= $location['location_id'] ?>"> Add All
+                                            </button>
                                         </th>
                                         </tfoot>
                                     </table>
@@ -177,6 +206,47 @@ $this->registerJs('
     }
     
     toastr.info("Info Message", "' . date('Y-m-d') . '");
+
+', \yii\web\View::POS_END);
+$this->registerJs('
+    
+			function selectAll(name){
+				var items=document.getElementsByName(name);
+				for(var i=0; i<items.length; i++){
+					if(items[i].type==\'checkbox\')
+						items[i].checked=true;
+				}
+			}
+			
+			function UnSelectAll(name){
+				var items=document.getElementsByName(name);
+				for(var i=0; i<items.length; i++){
+					if(items[i].type==\'checkbox\')
+						items[i].checked=false;
+				}
+			}		
+		
+
+', \yii\web\View::POS_END);
+$this->registerJs('
+    
+		
+		$(".add-all").on("click",function(){
+		
+		    var className = $(this).attr("data-example-id");
+		
+		    var inputs = $("." + className);
+		    var values = [];
+		    for(var i = 0; i < inputs.length; i++){
+		        if($(inputs[i]).val()){
+		            values.push($(inputs[i]).val());
+		            console.log("textbox value is ",$(inputs[i]).val());
+		        }
+                
+            }	
+            console.log("values array is ",values);
+            	
+		});
 
 ', \yii\web\View::POS_END);
 ?>
