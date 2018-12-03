@@ -107,6 +107,7 @@
     <?php endforeach; ?>
 </div>
 
+<<<<<<< HEAD
 <?php
 $spurl = \yii\helpers\Url::toRoute('single-data', true);
 $this->registerJs("
@@ -155,3 +156,30 @@ $this->registerJs("
         });
 ", \yii\web\View::POS_END);
 ?>
+=======
+
+<?php
+$this->registerJs('
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-bottom-left",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    }
+    
+    toastr.info("Info Message", "' . date('Y-m-d') . '");
+
+', \yii\web\View::POS_END);
+?>
+>>>>>>> 261d84db0925af90a7e255b224b5759a20279d65

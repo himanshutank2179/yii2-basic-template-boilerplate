@@ -1,29 +1,56 @@
 <?php
+
 use \yii\web\Request;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
-
 $baseUrl = str_replace('/web', '', (new Request)->getBaseUrl());
+
 
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'timeZone' => 'Asia/Calcutta',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'modules' => [
+        'gridview' => ['class' => 'kartik\grid\Module'],
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+            //'layout' => 'left-menu',
+            'mainLayout' => '@app/views/layouts/main.php',
+        ]
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'admin/*',
+            'gii/*',
+            'site/*',
+            'uploads/*',
+            'users/*',
+            'ws/*',
+        ]
+    ],
     'components' => [
+
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            //'defaultRoles' => ['user'],
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'RhaCSA1ys1IGo7mbt9FWgz4_ooNnPWZJ',
-            'baseUrl'=> $baseUrl,
+            'cookieValidationKey' => 'wdtCWf1E172OvZnxRpIk1kOat7EI-aTE',
+            'baseUrl' => $baseUrl,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\Users',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -46,19 +73,29 @@ $config = [
             ],
         ],
         'db' => $db,
-        
         'urlManager' => [
-            // 'baseUrl'=> $baseUrl,
+            'baseUrl' => $baseUrl,
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                // ''=> 'index',
+                '' => 'site/index',
+
             ],
         ],
-        
+        // 'gridview' => ['class' => 'kartik\grid\Module'],
+        /*
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
+        */
     ],
     'params' => $params,
 ];
+
+
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
@@ -79,18 +116,7 @@ if (YII_ENV_DEV) {
 
 return $config;
 
-function addMinutesToTime( $time, $plusMinutes, $plusHours ) {
-
-    $time = DateTime::createFromFormat( 'H:i:s', $time );
-    $time->add( new DateInterval( 'PT' . ( (integer) $plusHours ) . 'H' ) );
-    $time->add( new DateInterval( 'PT' . ( (integer) $plusMinutes ) . 'M' ) );
-    $newTime = $time->format( 'H:i:s' );
- 
-    return $newTime;
- }
-
-function p( $data ) {
-
+function p ($data){
     echo '<pre>';
     print_r($data);
     exit();
