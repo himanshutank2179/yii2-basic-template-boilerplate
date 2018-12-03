@@ -101,7 +101,7 @@ class WsController extends Controller
                 $d['location_image'] = !empty($ticket->location_image) ? Yii::$app->urlManager->createAbsoluteUrl('uploads/' . $ticket->location_image) : '';
                 $d['ticket_value_id'] = !empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : '';
                 $d['ticket_value'] = !empty($ticket->ticketValues->ticket_value) ? $ticket->ticketValues->ticket_value : '';
-                $d['time'] = date("g:i a", strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : ''));
+                $d['time'] = date("g:i A", strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : ''));
                 $nexttime = date('H:i:s', strtotime('+'. $ticket->hour.' hour +'. $ticket->minute . ' minutes', strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : '')));
                 $d['next_time'] =date("g:i a", strtotime($nexttime));
                array_push($data, $d);

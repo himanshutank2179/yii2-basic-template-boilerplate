@@ -30,10 +30,11 @@ class DashboardController extends \yii\web\Controller
                 $d['day_start_time'] = $ticket->day_start_time;
                 $d['day_end_time'] = $ticket->day_end_time;
                 $d['location_image'] = !empty($ticket->location_image) ? Yii::$app->urlManager->createAbsoluteUrl('uploads/' . $ticket->location_image) : '';
-                // $d['ticket_value_id'] = $ticket->ticket_value_id;
-                // $d['ticket_value'] = $ticket->ticket_value;
-                // $d['time'] = date("g:i a", strtotime($ticket->time));
-                // $d['date'] = $ticket->date;
+                $d['ticket_value_id'] = !empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : '';
+                $d['ticket_value'] = !empty($ticket->ticketValues->ticket_value) ? $ticket->ticketValues->ticket_value : '';
+                $d['time'] = date("g:i a", strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : ''));
+                $nexttime = date('H:i:s', strtotime('+'. $ticket->hour.' hour +'. $ticket->minute . ' minutes', strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : '')));
+                $d['next_time'] =date("g:i a", strtotime($nexttime));
                 array_push($data, $d);
             }
             // echo "<pre>";
