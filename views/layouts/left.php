@@ -50,7 +50,7 @@
                             ['label' => 'Managege Number', 'icon' => 'dashboard', 'url' => ['ticket-values/index']],
                         ],
                     ],
-                    // ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
+                     ['label' => 'Users', 'url' => ['users/index']],
                     // [
                     //     'label' => 'Some tools',
                     //     'icon' => 'share',
