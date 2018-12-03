@@ -41,7 +41,7 @@ class TicketValuesSearch extends TicketValues
      */
     public function search($params)
     {
-        $query = TicketValues::find();
+        $query = TicketValues::find()->orderBy(['ticket_value_id' => SORT_DESC]);
 
         // add conditions that should always apply here
 

@@ -21,7 +21,7 @@
                 </div>
                 <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
-                        <li><a href="#">Next Upcomming Number time: <?=  $location['next_time']?></a></li>
+                        <li><a href="#">Next Upcomming Number time: <?=  $next_time = $location['next_time']?></a></li>
                         <!--<li><a href="#">Tasks <span class="pull-right badge bg-aqua">5</span></a></li>
                         <li><a href="#">Completed Projects <span class="pull-right badge bg-green">12</span></a></li>
                         <li><a href="#">Followers <span class="pull-right badge bg-red">842</span></a></li>-->
@@ -35,9 +35,9 @@
                                         <span for="number" class="small"> Enter Value </span>
                                         <div class="input-group input-group-sm">
 
-                                            <input type="number" class="form-control" placeholder="Add New number">
+                                            <input type="text" id="location-id-<?= $location['location_id'] ?>"  class="form-control" placeholder="Add New number" required >
                                             <span class="input-group-btn">
-                                 <button type="button" class="btn btn-info btn-flat">Add</button>
+                                 <button type="submit" class="btn btn-info btn-flat single-data" data-value-time="<?= $location['next_time24']?>"" id="<?=$location['location_id']?>" data-location-id="<?= $location['location_id'] ?>">Add</button>
                                </span>
                                         </div>
                                     </h3>
@@ -54,7 +54,7 @@
                                             <th scope="col">#</th>
                                             <th scope="col">Time</th>
                                             <th scope="col">Number</th>
-                                            <th scope="col">&nbsp;</th>
+                                            <th scope="col"><button class="btn btn-sm btn-primary">Check All</button></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -71,9 +71,9 @@
                                         <?php for ($i = 1; $i <= $maxDateInt; $i++): ?>
                                             <tr>
                                                 <th scope="row"><?= $i ?></th>
-                                                <td><?= $newTime ?></td>
-                                                <td><input type="text" class="form-control" name="number"></td>
-                                                <td><input type="checkbox" name="name" checked></td>
+                                                <td><?= date("g:i a", strtotime($newTime)) ?></td>
+                                                <td><input type="text" class="form-control" name="location-value-" data-value-time="<?= $newTime ?>" data-location-id="<?= $location['location_id'] ?>"></td>
+                                                <td><center><input type="checkbox" name="location-checkbox-<?= $location['location_id'],$i ?>" ></center></td>
                                             </tr>
                                             <?php if (date('H:i:s', strtotime($newTime)) < date('H:i:s', strtotime($end))): ?>
                                                 <?php $newTime = date('H:i:s', strtotime('+' . $durationH . ' hour +' . $durationM . ' minutes', strtotime($newTime))); ?>
@@ -106,3 +106,52 @@
 
     <?php endforeach; ?>
 </div>
+
+<?php
+$spurl = \yii\helpers\Url::toRoute('single-data', true);
+$this->registerJs("
+    $('.single-data').click(function ()
+        {
+            //event.preventDefault();
+            var lid = $(this).attr('data-location-id');
+            var time = $(this).attr('data-value-time');
+            var nvalue = $('#'+'location-id-'+lid).val();
+            if (nvalue != null && nvalue != '')
+            {
+                console.log(lid,time,nvalue);
+                $.ajax(
+                {
+                    url: '$spurl',
+                    type: 'GET', 
+                    data:
+                    {
+                        location_id: lid,
+                        time: time,
+                        value: nvalue,
+                    },
+                    success: function(response)
+                    {
+                        if(response == false || response == 0)
+                        {
+                            // $('#ticketvalues-time').prop('disabled', false);
+                            console.log(response);
+                        }
+                        else
+                        {
+                            //$('#ticketvalues-time').val(response.day_start_time);
+                            //$('#ticketvalues-time').prop('disabled', true);
+                            console.log(response);
+                        }
+                    },
+                    error: function(xhr)
+                    {
+                        //Do Something to handle error
+                    }
+                });
+            }
+            else{
+                alert('please enter number');
+            }
+        });
+", \yii\web\View::POS_END);
+?>

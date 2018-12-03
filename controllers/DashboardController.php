@@ -34,6 +34,7 @@ class DashboardController extends \yii\web\Controller
                 $d['ticket_value'] = !empty($ticket->ticketValues->ticket_value) ? $ticket->ticketValues->ticket_value : '';
                 $d['time'] = date("g:i a", strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : ''));
                 $nexttime = date('H:i:s', strtotime('+'. $ticket->hour.' hour +'. $ticket->minute . ' minutes', strtotime(!empty($ticket->ticketValues->ticket_value_id) ? $ticket->ticketValues->ticket_value_id : '')));
+                $d['next_time24'] =$nexttime;
                 $d['next_time'] =date("g:i a", strtotime($nexttime));
                 array_push($data, $d);
             }
@@ -43,6 +44,24 @@ class DashboardController extends \yii\web\Controller
         	return $this->render('index', ['location_data' => $data,]);
         }
         return $this->render('index', ['location_data' => $data,]);        
+    }
+
+    public function actionSingleData($location_id,$time,$value)
+    {
+        $model = new TicketValues();
+
+        if (!empty($location_id)&& !empty($time) && !empty($value))
+        {
+            date_default_timezone_set('Asia/Kolkata');
+            $model->location_id = $location_id;
+            $model->time = $time;
+            $model->ticket_value = $value;
+            $model->date = date("Y-m-d");
+            $model->created_at = date('Y-m-d h:i:s');
+            $model->save();
+            return "data inserted";
+        }
+        return 0;
     }
 
 }
