@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'model' => $searchModel,
                     'attribute' => 'time',
                    //'name' => 'created_at',
-                    'value' => date('hh:mm:i'),
+                    'value' => date('H:mm:i'),
                     'template' => '{addon}{input}',
                         'clientOptions' => [
                              'startView' => 1,
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                'maxView' => 1,
                                'autoclose' => true,
                                //'linkFormat' => 'HH:ii P', // if inline = true
-                               'format' => 'hh:ii:', // if inline = false
+                               'format' => 'H:mm:i', // if inline = false
                                'todayBtn' => true
                         ]
                 ]),

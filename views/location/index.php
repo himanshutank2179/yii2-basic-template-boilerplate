@@ -37,6 +37,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'day_start_time',
             'day_end_time',
+            'hour',
+            'minute',
             //'created_at',
 
             ['class' => 'yii\grid\ActionColumn'],

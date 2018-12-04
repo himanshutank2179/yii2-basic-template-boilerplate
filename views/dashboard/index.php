@@ -1,3 +1,4 @@
+<?= date('Y-m-d h:i:s'); ?>
 <div class="row">
     <?php
     // echo "<pre>";

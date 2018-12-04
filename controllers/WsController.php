@@ -103,7 +103,7 @@ class WsController extends Controller
                 $d['day_end_time'] = $ticket->day_end_time;
                 $d['day_end_time12'] = date("g:i a", strtotime($ticket->day_end_time));
                 $d['location_image'] = !empty($ticket->location_image) ? Yii::$app->urlManager->createAbsoluteUrl('uploads/' . $ticket->location_image) : '';
-                 date_default_timezone_set('Asia/Kolkata');
+                 //date_default_timezone_set('Asia/Kolkata');
                 $ticketdata = TicketValues::find()->where(['location_id' => $location_id])->andwhere(['=', 'date(date)', date('Y-m-d')])->andwhere(['<=', 'time(time)', date('H:i:s')])->orderBy(['ticket_value_id' => SORT_DESC])->one();
                 $d['ticket_value_id'] = !empty($ticketdata->ticket_value_id) ? $ticketdata->ticket_value_id : '';
                 $d['ticket_value'] = !empty($ticketdata->ticket_value) ? $ticketdata->ticket_value : '';
