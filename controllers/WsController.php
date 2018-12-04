@@ -61,6 +61,7 @@ class WsController extends Controller
             $action->id == 'login' ||
             $action->id == 'submit-survey' ||
             $action->id == 'save-place-visited' ||
+            $action->id == 'save-time-slots' ||
             $action->id == 'update-profile'
         ) {
 
@@ -88,49 +89,44 @@ class WsController extends Controller
         //$tickets = TicketValues::find()->where(['=', 'date(date)', date('Y-m-d')])->groupBy(['location_id'])->orderBy(['ticket_value_id' => SORT_DESC])->all();
         //$tickets = TicketValues::find()->select('location_id')->distinct()->all();
         $tickets = Location::find()->groupBy(['location_id'])->all();
-        if($tickets)
-        {
+        if ($tickets) {
             $data = [];
             foreach ($tickets as $key => $ticket) {
-                $time ='';
-                $nexttime ='';
+                $time = '';
+                $nexttime = '';
                 $location_id = $d['location_id'] = $ticket->location_id;
                 $d['location_name'] = $ticket->location_name;
-                $hour =$d['hour'] = $ticket->hour;
-                $minute =$d['minute'] = $ticket->minute;
+                $hour = $d['hour'] = $ticket->hour;
+                $minute = $d['minute'] = $ticket->minute;
                 $starttime = $d['day_start_time'] = $ticket->day_start_time;
                 $d['day_start_time12'] = date("g:i a", strtotime($ticket->day_start_time));
                 $d['day_end_time'] = $ticket->day_end_time;
                 $d['day_end_time12'] = date("g:i a", strtotime($ticket->day_end_time));
                 $d['location_image'] = !empty($ticket->location_image) ? Yii::$app->urlManager->createAbsoluteUrl('uploads/' . $ticket->location_image) : '';
-                 date_default_timezone_set('Asia/Kolkata');
+                date_default_timezone_set('Asia/Kolkata');
                 $ticketdata = TicketValues::find()->where(['location_id' => $location_id])->andwhere(['=', 'date(date)', date('Y-m-d')])->andwhere(['<=', 'time(time)', date('H:i:s')])->orderBy(['ticket_value_id' => SORT_DESC])->one();
                 $d['ticket_value_id'] = !empty($ticketdata->ticket_value_id) ? $ticketdata->ticket_value_id : '';
                 $d['ticket_value'] = !empty($ticketdata->ticket_value) ? $ticketdata->ticket_value : '';
                 $d['ticket_date'] = !empty($ticketdata->date) ? $ticketdata->date : '';
                 $time = $d['time'] = !empty($ticketdata->time) ? date("g:i A", strtotime($ticketdata->time)) : '';
-                $nexttime = !empty($time) ? date('H:i:s', strtotime('+'. $hour.' hour +'. $minute . ' minutes', strtotime($time))) : '';
+                $nexttime = !empty($time) ? date('H:i:s', strtotime('+' . $hour . ' hour +' . $minute . ' minutes', strtotime($time))) : '';
                 $d['next_time'] = !empty($nexttime) ? date("g:i a", strtotime($nexttime)) : date("g:i a", strtotime($starttime));
-               array_push($data, $d);
+                array_push($data, $d);
             }
             // echo "<pre>";
             // print_r($data);
             // exit();
             return ['status' => 200, 'data' => $data];
-        }
-        else
-        {
+        } else {
             return ['status' => 404, 'data' => 'No Data Found.'];
         }
     }
 
-    public function actionGetTicketData($location_id,$bydate=null,$month=null, $year=null)
+    public function actionGetTicketData($location_id, $bydate = null, $month = null, $year = null)
     {
-        if(!empty($location_id) && !empty($bydate))
-        {
-            $tickets = TicketValues::find()->where(['location_id'=> $location_id,'date'=>$bydate])->orderBy(['time' => SORT_ASC])->all();
-            if($tickets)
-            {
+        if (!empty($location_id) && !empty($bydate)) {
+            $tickets = TicketValues::find()->where(['location_id' => $location_id, 'date' => $bydate])->orderBy(['time' => SORT_ASC])->all();
+            if ($tickets) {
                 $data = [];
                 foreach ($tickets as $key => $ticket) {
                     $location_name = $ticket->location->location_name;
@@ -144,20 +140,16 @@ class WsController extends Controller
                 // print_r($data);
                 // exit();
 
-                return ['status' => 200, 'data' => $data,'location_name'=> $location_name];
-            }
-            else
-            {
+                return ['status' => 200, 'data' => $data, 'location_name' => $location_name];
+            } else {
                 return ['status' => 404, 'data' => 'No Data Found.'];
             }
         }
 
-        if(!empty($location_id) && !empty($month) && !empty($year))
-        {
-            $tickets = TicketValues::find()->where(['location_id'=> $location_id])->andWhere(['=', 'month(date)', $month])->andWhere(['=', 'year(date)', $year])->all();
+        if (!empty($location_id) && !empty($month) && !empty($year)) {
+            $tickets = TicketValues::find()->where(['location_id' => $location_id])->andWhere(['=', 'month(date)', $month])->andWhere(['=', 'year(date)', $year])->all();
 
-            if($tickets)
-            {
+            if ($tickets) {
                 $data = [];
                 foreach ($tickets as $key => $ticket) {
                     $location_name = $ticket->location->location_name;
@@ -169,26 +161,45 @@ class WsController extends Controller
                 // echo "<pre>";
                 // print_r($data);
                 // exit();
-                $time  = date("g:i a", strtotime($location_time));
-                $location_name = $location_name."(".$time.")";
+                $time = date("g:i a", strtotime($location_time));
+                $location_name = $location_name . "(" . $time . ")";
 
-                return ['status' => 200, 'data' => $data,'location_name'=> $location_name];
-            }
-            else
-            {
+                return ['status' => 200, 'data' => $data, 'location_name' => $location_name];
+            } else {
                 return ['status' => 404, 'data' => 'No Data Found...'];
             }
-        }
-        else
-        {
+        } else {
             return ['status' => 404, 'data' => 'No Data Found.'];
         }
     }
 
 
-
-    public function actionGetTimeSlots()
+    public function actionSaveTimeSlots()
     {
-        
+        $request = Yii::$app->request->post();
+        $values = !empty($request['values']) ? $request['values'] : '';
+        $locations = !empty($request['locations']) ? $request['locations'] : '';
+        $times = !empty($request['times']) ? $request['times'] : '';
+        foreach ($values as $key => $value) {
+            $isRecordAvailable = \app\models\TicketValues::find()
+                ->where(['date(date)' => date('Y-m-d')])
+                ->andWhere(['time(time)' => date('H:i:s', strtotime($times[$key]))])
+                ->andWhere(['location_id' => $locations[$key]])
+                ->one();
+            if (empty($isRecordAvailable)) {
+                $newTicket = new TicketValues();
+                $newTicket->location_id = $locations[$key];
+                $newTicket->ticket_value = $value;
+                $newTicket->time = date('H:i:s', strtotime($times[$key]));
+                $newTicket->date = date('Y-m-d');
+                $newTicket->created_at = date('Y-m-d H:i:s');
+                $newTicket->save(false);
+            }
+
+
+        }
+        return 1;
     }
+
+
 }

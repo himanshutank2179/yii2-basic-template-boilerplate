@@ -85,22 +85,46 @@
                                         $tr = '';
                                         ?>
                                         <?php for ($i = 1; $i <= $maxDateInt; $i++): ?>
+                                            <?php
+
+                                            $inputTd = '<td>
+                                                    <input
+                                                            type="text"
+                                                            class="form-control ' . $location['location_id'] . '"
+                                                            name=""
+                                                            data-value-time="' . $newTime . '"
+                                                            data-location-id="' . $location['location_id'] . '"
+                                                    >
+                                                </td><td> <input type="checkbox" name="' . $location['location_id'] . '"> </td>';
+
+                                            $isRecordAvailable = \app\models\TicketValues::find()
+                                                ->where(['date(date)' => date('Y-m-d')])
+                                                ->andWhere(['time(time)' => date('H:i:s', strtotime($newTime))])
+                                                ->andWhere(['location_id' => $location['location_id']])
+                                                ->one();
+
+                                            if ($isRecordAvailable) {
+                                                $inputTd = '<td>
+                                                    <input
+                                                            type="text"
+                                                            class="form-control ' . $location['location_id'] . '"
+                                                            name=""
+                                                            value = "' . $isRecordAvailable->ticket_value . '"
+                                                            data-value-time="' . $newTime . '"
+                                                            data-location-id="' . $location['location_id'] . '"
+                                                            disabled
+                                                    >
+                                                </td><td> <input type="checkbox" checked disabled> </td>';
+                                            }
+
+                                            ?>
                                             <tr>
                                                 <th scope="row"><?= $i ?></th>
                                                 <td><?= date("g:i a", strtotime($newTime)) ?></td>
-                                                <td>
-                                                    <input
-                                                            type="text"
-                                                            class="form-control <?= $location['location_id']; ?>"
-                                                            name="location-value-"
-                                                            data-value-time="<?= $newTime ?>"
-                                                            data-location-id="<?= $location['location_id'] ?>"
-                                                    >
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox"
-                                                           name="<?= $location['location_id'] ?>">
-                                                </td>
+
+                                                <?= $inputTd ?>
+
+
                                             </tr>
                                             <?php if (date('H:i:s', strtotime($newTime)) < date('H:i:s', strtotime($end))): ?>
                                                 <?php $newTime = date('H:i:s', strtotime('+' . $durationH . ' hour +' . $durationM . ' minutes', strtotime($newTime))); ?>
@@ -138,6 +162,7 @@
 
 <?php
 $spurl = \yii\helpers\Url::toRoute('single-data', true);
+$save_time_slots_url = \yii\helpers\Url::toRoute('/ws/save-time-slots', true);
 $this->registerJs("
     $('.single-data').click(function ()
         {
@@ -205,7 +230,7 @@ $this->registerJs('
       "hideMethod": "fadeOut"
     }
     
-    toastr.info("Info Message", "' . date('Y-m-d') . '");
+    toastr.info("Info Message", "' . date('Y-m-d H:i:s') . '");
 
 ', \yii\web\View::POS_END);
 $this->registerJs('
@@ -213,7 +238,7 @@ $this->registerJs('
 			function selectAll(name){
 				var items=document.getElementsByName(name);
 				for(var i=0; i<items.length; i++){
-					if(items[i].type==\'checkbox\')
+					if(items[i].type=="checkbox")
 						items[i].checked=true;
 				}
 			}
@@ -221,7 +246,7 @@ $this->registerJs('
 			function UnSelectAll(name){
 				var items=document.getElementsByName(name);
 				for(var i=0; i<items.length; i++){
-					if(items[i].type==\'checkbox\')
+					if(items[i].type=="checkbox")
 						items[i].checked=false;
 				}
 			}		
@@ -237,14 +262,39 @@ $this->registerJs('
 		
 		    var inputs = $("." + className);
 		    var values = [];
+		    var times = [];
+		    var locations = [];
 		    for(var i = 0; i < inputs.length; i++){
 		        if($(inputs[i]).val()){
 		            values.push($(inputs[i]).val());
-		            console.log("textbox value is ",$(inputs[i]).val());
+		            times.push($(inputs[i]).attr("data-value-time"));
+		            locations.push($(inputs[i]).attr("data-location-id"));		            
 		        }
                 
-            }	
-            console.log("values array is ",values);
+            }	            
+            
+            
+            $.ajax(
+            {
+            type: "POST",
+            url: "' . $save_time_slots_url . '",
+            data: {
+                "values": values,
+                "times": times,
+                "locations": locations
+            },
+            success: function (res)
+            {
+                if(res){
+                    for(var i = 0; i < inputs.length; i++){
+                        if($(inputs[i]).val()){
+                            $(inputs[i]).attr("disabled",true);		                                                                                                                                                             		            
+                        }                        
+                    }                    
+                   
+                }   
+            }
+            });
             	
 		});
 
