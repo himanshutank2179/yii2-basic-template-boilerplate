@@ -103,11 +103,7 @@ class WsController extends Controller
                 $d['day_end_time'] = $ticket->day_end_time;
                 $d['day_end_time12'] = date("g:i a", strtotime($ticket->day_end_time));
                 $d['location_image'] = !empty($ticket->location_image) ? Yii::$app->urlManager->createAbsoluteUrl('uploads/' . $ticket->location_image) : '';
-<<<<<<< HEAD
-                 //date_default_timezone_set('Asia/Kolkata');
-=======
-                date_default_timezone_set('Asia/Kolkata');
->>>>>>> a1ea62d545d1869251f190ba9fd9c00b9531463e
+                //date_default_timezone_set('Asia/Kolkata');
                 $ticketdata = TicketValues::find()->where(['location_id' => $location_id])->andwhere(['=', 'date(date)', date('Y-m-d')])->andwhere(['<=', 'time(time)', date('H:i:s')])->orderBy(['ticket_value_id' => SORT_DESC])->one();
                 $d['ticket_value_id'] = !empty($ticketdata->ticket_value_id) ? $ticketdata->ticket_value_id : '';
                 $d['ticket_value'] = !empty($ticketdata->ticket_value) ? $ticketdata->ticket_value : '';
@@ -129,7 +125,14 @@ class WsController extends Controller
     public function actionGetTicketData($location_id, $bydate = null, $month = null, $year = null)
     {
         if (!empty($location_id) && !empty($bydate)) {
-            $tickets = TicketValues::find()->where(['location_id' => $location_id, 'date' => $bydate])->orderBy(['time' => SORT_ASC])->all();
+            if($bydate == date('Y-m-d'))
+            {
+            $tickets = TicketValues::find()->where(['location_id' => $location_id, 'date' => $bydate])->andwhere(['<=', 'time(time)', date('H:i:s')])->orderBy(['time' => SORT_ASC])->all();
+            }
+            else
+            {
+                $tickets = TicketValues::find()->where(['location_id' => $location_id, 'date' => $bydate])->orderBy(['time' => SORT_ASC])->all();
+            }
             if ($tickets) {
                 $data = [];
                 foreach ($tickets as $key => $ticket) {
@@ -139,11 +142,6 @@ class WsController extends Controller
                     $d['ticket_value'] = $ticket->ticket_value;
                     array_push($data, $d);
                 }
-
-                // echo "<pre>";
-                // print_r($data);
-                // exit();
-
                 return ['status' => 200, 'data' => $data, 'location_name' => $location_name];
             } else {
                 return ['status' => 404, 'data' => 'No Data Found.'];
@@ -151,15 +149,20 @@ class WsController extends Controller
         }
 
         if (!empty($location_id) && !empty($month) && !empty($year)) {
+            
             $tickets = TicketValues::find()->where(['location_id' => $location_id])->andWhere(['=', 'month(date)', $month])->andWhere(['=', 'year(date)', $year])->all();
 
             if ($tickets) {
                 $data = [];
+                $today = date('Y-m-d');
+                $todaytime = date('H:i:s'); 
                 foreach ($tickets as $key => $ticket) {
+                    
                     $location_name = $ticket->location->location_name;
                     $location_time = $ticket->location->day_start_time;
-                    $d['date'] = $ticket->date;
-                    $d['ticket_value'] = $ticket->ticket_value;
+                    $date =$d['date'] = $ticket->date;
+                    ($today == $date && $todaytime <= $location_time) ? $d['ticket_value'] = '' : $d['ticket_value'] = $ticket->ticket_value;
+                    
                     array_push($data, $d);
                 }
                 // echo "<pre>";
@@ -198,11 +201,22 @@ class WsController extends Controller
                 $newTicket->date = date('Y-m-d');
                 $newTicket->created_at = date('Y-m-d H:i:s');
                 $newTicket->save(false);
+                // return 1;
             }
-
-
         }
         return 1;
+    }
+
+    public function actionGetNotification()
+    {
+        //$ticketdata = TicketValues::find()->where(['=', 'date(date)', date('Y-m-d')])->andwhere(['<=', 'DATE_SUB(time)', date('H:i:s')])->orderBy(['ticket_value_id' => SORT_DESC])->all(); 
+        //DATE_SUB( '2016-02-23 20:55:58', INTERVAL 2 MINUTE )
+        $ticketdata = TicketValues::find()->where(['=', 'date(date)', date('Y-m-d')])->andWhere(['>', 'DATE_SUB(time, INTERVAL 2 MINUTE)', date('H:i:s')])->andWhere(['<', 'DATE_SUB(time, INTERVAL 2 MINUTE)', date('H:i:s')])->all();
+        echo "<pre>";
+        print_r($ticketdata);
+        exit();
+
+        return $ticketdata;
     }
 
 

@@ -1,14 +1,13 @@
-<?= date('Y-m-d h:i:s'); ?>
+<?php
+use app\models\Location;
+use app\models\TicketValues;
+?>
 <div class="row">
     <?php
-    // echo "<pre>";
-    // print_r($location_data);
-
+    if($location_data)
+    {
     foreach ($location_data as $key => $location): ?>
-
-
         <div class="col-md-4">
-
             <div class="box box-widget widget-user-2">
                 <!-- Add the bg color to the header using any of the bg-* classes -->
                 <div class="widget-user-header bg-blue">
@@ -23,9 +22,6 @@
                 <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
                         <li><a href="#">Next Upcomming Number time: <?= $next_time = $location['next_time'] ?></a></li>
-                        <!--<li><a href="#">Tasks <span class="pull-right badge bg-aqua">5</span></a></li>
-                        <li><a href="#">Completed Projects <span class="pull-right badge bg-green">12</span></a></li>
-                        <li><a href="#">Followers <span class="pull-right badge bg-red">842</span></a></li>-->
                         <li>
                             <?php //echo ($key != 0) ? 'collapsed-box' : '' ?>
                             <div class="box box-primary collapsed-box" style="background-color: white;">
@@ -40,8 +36,8 @@
                                                    class="form-control" placeholder="Add New number" required>
                                             <span class="input-group-btn">
                                  <button type="submit" class="btn btn-info btn-flat single-data"
-                                         data-value-time="<?= $location['next_time24'] ?>"" id="<?= $location['location_id'] ?>
-                                                " data-location-id="<?= $location['location_id'] ?>">Add</button>
+                                         data-value-time="<?= $location['next_time24'] ?>" data-value-time12="<?= $location['next_time'] ?>" id="<?= $location['location_id'] ?>
+                                                " data-location-id="<?= $location['location_id'] ?>" data-location-name="<?= $location['location_name'] ?>">Add</button>
                                </span>
                                         </div>
                                     </h3>
@@ -60,6 +56,8 @@
                                                         onclick='selectAll("<?= $location['location_id'] ?>")'>Select
                                                     All
                                                 </button>
+                                            </th>
+                                            <th>
                                                 <button class="btn btn-sm btn-primary"
                                                         onclick='UnSelectAll("<?= $location['location_id'] ?>")'>
                                                     Unselect All
@@ -137,11 +135,23 @@
                                         <?php endfor; ?>
                                         </tbody>
                                         <tfoot>
+                                        <tr>
                                         <th>
                                             <button class="btn btn-primary add-all"
                                                     data-example-id="<?= $location['location_id'] ?>"> Add All
                                             </button>
                                         </th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick='selectAll("<?= $location['location_id'] ?>")'>Select 
+                                                    All
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="btn btn-sm btn-primary" onclick='UnSelectAll("<?= $location['location_id'] ?>")'>
+                                                    Unselect All
+                                            </button>
+                                        </th>
+                                    </tr>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -158,13 +168,217 @@
         </div>
 
 
-    <?php endforeach; ?>
+    <?php endforeach; 
+}
+?>
 </div>
+<div class="row">
+<?php
+    $locations = Location::find()->groupBy(['location_id'])->all();
+    if($locations):
+    foreach ($locations as $key => $location):
+        $ticketdata = TicketValues::find()->where(['location_id' => $location->location_id])->orderBy(['ticket_value_id' => SORT_DESC])->limit(20)->all();
+        if($location->day_start_time != $location->day_end_time):
+        if($ticketdata):?>
+        <div class="col-md-4">
+            <div class="box box-primary collapsed-box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">All Numbers : <?= $location->location_name ?></h3>
+                        <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        </div>
+                </div>
+                <div class="box-body">
+                    <label>Select Date</label>
+                    <div class="input-group date datepicker" data-provide="datepicker">
+                        <input type="text" class="form-control datepicker onchangedate" data-date-end-date="0d" location-id="<?= $location->location_id ?>">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <center><caption><?= $location->location_name ?></caption></center>
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Time</th>
+                                <th scope="col">Number</th>
+                            </tr>
+                        </thead>
+                        <tbody id="locationss-id-<?= $location->location_id ?>">
+                            <?php foreach ($ticketdata as $key => $ticket): ?>
+                            <tr>
+                                <th scope="row"><?= $key+1 ?></th>
+                                <td><?= $ticket->date ?></td>
+                                <td><?= date("g:i a", strtotime($ticket->time)) ?></td>
+                                <td><?= $ticket->ticket_value ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif;
+        else:
+        if($ticketdata): ?>
+        <div class="col-md-4">
+            <div class="box box-primary collapsed-box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">All Numbers : <?= $location->location_name ?></h3>
+                        <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        </div>
+                </div>
+                <div class="box-body">
+                    <label>Select Month</label>
+                    <div class="input-group date date-picker" data-provide="datepicker">
+                        <input type="text" class="form-control date-picker onchangemonth" data-date-end-date="0d" location-id="<?= $location->location_id ?>">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+        <table class="table">
+            <caption><?= $location->location_name ?></caption>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col"><?= $location->location_name.'('.date("g:i a", strtotime($location->day_start_time)).')'; ?></th>
+                </tr>
+            </thead>
+            <tbody id="locationss-id-<?= $location->location_id ?>">
+                <?php foreach ($ticketdata as $key => $ticket): ?>
+                <tr>
+                    <th scope="row"><?= $key+1 ?></th>
+                    <td><?= $ticket->date ?></td>
+                    <td><?= $ticket->ticket_value ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        </div>
+            </div>
+        </div>
 
+        <?php endif;
+    endif;
+    endforeach;
+    endif;
+?>
+</div>
 <?php
 $spurl = \yii\helpers\Url::toRoute('single-data', true);
 $save_time_slots_url = \yii\helpers\Url::toRoute('/ws/save-time-slots', true);
+$get_notification = \yii\helpers\Url::toRoute('/ws/get-notification', true);
+$getByDate = \yii\helpers\Url::toRoute('/ws/get-ticket-data', true);
 $this->registerJs("
+    $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    });
+
+    $('.date-picker').datepicker( {
+    format: 'mm-yyyy',
+    viewMode: 'months', 
+    minViewMode: 'months',
+    });
+    $('.onchangedate').on('change',function()
+    {
+        var date = $(this).val();
+        var lid = $(this).attr('location-id');
+        if (date != null && date != '')
+            {
+                $.ajax(
+                {
+                    url: '$getByDate',
+                    type: 'GET', 
+                    data:
+                    {
+                        location_id: lid,
+                        bydate: date,
+                    },
+                    success: function(response)
+                    {
+                        if(response.status === 404)
+                        {
+                            $('#locationss-id-'+lid).html('<tr><td colspan=4><h4>No Data Found</h4></td></tr>');
+                            console.log(response);
+                        }
+                        else
+                        {
+                            var responsedata = '';
+                            $('#locationss-id-'+lid).html('');
+                            $.each(response.data, function(k,v) {
+                                responsedata = '<tr><th scope=row >'+(k+1)+'</th><td>'+v.date+'</td><td>'+v.time+'</td><td>'+v.ticket_value+'</td></tr>';
+                                //console.log('sasa ',responsedata);
+                                $('#locationss-id-'+lid).append(responsedata);
+                            });
+                        }
+
+                    },
+                    error: function(xhr)
+                    {
+                        //Do Something to handle error
+                    }
+                });
+            }
+            else{
+                alert('please enter number');
+            }
+    });
+
+    $('.onchangemonth').on('change',function()
+    {
+        var date = $(this).val();
+        date = date.split('-');
+        var month = date[0];
+        var year = date[1];
+        var lid = $(this).attr('location-id');
+        if (month != null && year != '')
+            {
+                $.ajax(
+                {
+                    url: '$getByDate',
+                    type: 'GET', 
+                    data:
+                    {
+                        location_id: lid,
+                        month: month,
+                        year: year,
+                    },
+                    success: function(response)
+                    {
+                        if(response.status === 404)
+                        {
+                            $('#locationss-id-'+lid).html('<tr><td colspan=4><h4>No Data Found</h4></td></tr>');
+                        }
+                        else
+                        {
+                            var responsedata = '';
+                            $('#locationss-id-'+lid).html('');
+                            $.each(response.data, function(k,v) {
+                                responsedata = '<tr><th scope=row >'+(k+1)+'</th><td>'+v.date+'</td><td>'+v.ticket_value+'</td></tr>';
+                                $('#locationss-id-'+lid).append(responsedata);
+                            });
+                        }
+
+                    },
+                    error: function(xhr)
+                    {
+                        //Do Something to handle error
+                    }
+                });
+            }
+            else{
+                alert('please select month and year');
+            }
+    });
+
     $('.single-data').click(function ()
         {
             //event.preventDefault();
@@ -190,13 +404,16 @@ $this->registerJs("
                         {
                             // $('#ticketvalues-time').prop('disabled', false);
                             console.log(response);
+                            swal('Number Add', 'Number Already Added', 'success');
                         }
                         else
                         {
                             //$('#ticketvalues-time').val(response.day_start_time);
                             //$('#ticketvalues-time').prop('disabled', true);
                             console.log(response);
+                            swal('Good job!', 'Number Added', 'success');
                         }
+
                     },
                     error: function(xhr)
                     {
@@ -210,29 +427,54 @@ $this->registerJs("
         });
 ", \yii\web\View::POS_END);
 ?>
-
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <?php
 $this->registerJs('
     toastr.options = {
-      "closeButton": false,
+      "closeButton": true,
       "debug": false,
       "newestOnTop": false,
-      "progressBar": false,
+      "progressBar": true,
       "positionClass": "toast-bottom-left",
       "preventDuplicates": false,
-      "onclick": null,
       "showDuration": "300",
       "hideDuration": "1000",
-      "timeOut": "5000",
+      "timeOut": "180000",
       "extendedTimeOut": "1000",
       "showEasing": "swing",
       "hideEasing": "linear",
       "showMethod": "fadeIn",
       "hideMethod": "fadeOut"
     }
+    // var lname = $(".single-data").attr("data-location-name");
+    // var time = $(".single-data").attr("data-value-time12");
+    // toastr.info("Please Enter The Number of Location : "+lname, "Next Number Result : "+time);
     
-    toastr.info("Info Message", "' . date('Y-m-d H:i:s') . '");
-
+    var ajax_call = function()
+    {
+        $(".single-data").each(function(){
+            var lid = $(this).attr("data-location-id");
+            var time = $(this).attr("data-value-time");
+            var time12 = $(this).attr("data-value-time12");
+            var lname = $(this).attr("data-location-name");
+            //var time = "13:50:00";
+            var addedtime = moment.utc(time,"HH:mm:ss").subtract(03,"minutes").format("HH:mm:ss");
+            var dt = new Date();
+            var ctime = dt.getHours() + ":" + dt.getMinutes() + ":00";
+            if(ctime === addedtime)
+            {
+                // alert("popup open");
+                toastr.info("Please Enter The Number of Location : "+lname, "Next Number Result : "+time12);
+            }
+            console.log("subtract time : ",addedtime);
+            console.log("current time : ",ctime);
+            console.log(lid);
+            console.log(time);
+            });
+    };
+    var interval = 1000 * 60 * 1; // where X is your every X minutes
+    setInterval(ajax_call, interval);
 ', \yii\web\View::POS_END);
 $this->registerJs('
     
@@ -293,7 +535,8 @@ $this->registerJs('
                         }                        
                     }                    
                    
-                }   
+                }
+                swal("Good job!", "Number Added", "success");
             }
             });
             	
