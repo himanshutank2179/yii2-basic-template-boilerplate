@@ -13,46 +13,23 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-        'options' => [
-            'data-pjax' => 1
-        ],
     ]); ?>
 
     <?= $form->field($model, 'user_id') ?>
 
-    <?= $form->field($model, 'first_name') ?>
+    <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'last_name') ?>
+    <?= $form->field($model, 'email') ?>
+
+    <?= $form->field($model, 'profile_pic') ?>
 
     <?= $form->field($model, 'username') ?>
 
-    <?= $form->field($model, 'password') ?>
-
-    <?php // echo $form->field($model, 'raw_password') ?>
-
-    <?php // echo $form->field($model, 'photo') ?>
-
-    <?php // echo $form->field($model, 'email') ?>
-
-    <?php // echo $form->field($model, 'dob') ?>
-
-    <?php // echo $form->field($model, 'mobile') ?>
-
-    <?php // echo $form->field($model, 'accessToken') ?>
-
-    <?php // echo $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'device_name') ?>
-
-    <?php // echo $form->field($model, 'device_os_version') ?>
-
-    <?php // echo $form->field($model, 'device_type') ?>
-
-    <?php // echo $form->field($model, 'app_version') ?>
-
-    <?php // echo $form->field($model, 'device_id') ?>
+    <?php // echo $form->field($model, 'password') ?>
 
     <?php // echo $form->field($model, 'is_deleted') ?>
+
+    <?php // echo $form->field($model, 'created_at') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

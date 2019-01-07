@@ -9,23 +9,13 @@ use yii\web\IdentityInterface;
  * This is the model class for table "users".
  *
  * @property int $user_id
- * @property string $first_name
- * @property string $last_name
+ * @property string $name
+ * @property string $email
+ * @property string $profile_pic
  * @property string $username
  * @property string $password
- * @property string $raw_password
- * @property string $photo
- * @property string $email
- * @property string $dob
- * @property string $mobile
- * @property string $accessToken
- * @property string $created_at
- * @property string $device_name
- * @property string $device_os_version
- * @property string $device_type
- * @property string $app_version
- * @property string $device_id
  * @property int $is_deleted
+ * @property string $created_at
  */
 class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
@@ -45,13 +35,10 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['dob', 'created_at'], 'safe'],
-            [['accessToken'], 'string'],
+            [['name', 'username', 'is_deleted', 'created_at'], 'required'],
             [['is_deleted'], 'integer'],
-            [['first_name', 'last_name', 'raw_password', 'email'], 'string', 'max' => 100],
-            [['username', 'device_name', 'device_os_version', 'device_type', 'app_version', 'device_id'], 'string', 'max' => 255],
-            [['password', 'photo'], 'string', 'max' => 200],
-            [['mobile'], 'string', 'max' => 20],
+            [['created_at', 'authKey'], 'safe'],
+            [['name', 'email', 'profile_pic', 'username', 'password'], 'string', 'max' => 255],
         ];
     }
 
@@ -62,25 +49,16 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             'user_id' => 'User ID',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
+            'name' => 'Name',
+            'email' => 'Email',
+            'profile_pic' => 'Profile Pic',
             'username' => 'Username',
             'password' => 'Password',
-            'raw_password' => 'Raw Password',
-            'photo' => 'Photo',
-            'email' => 'Email',
-            'dob' => 'Dob',
-            'mobile' => 'Mobile',
-            'accessToken' => 'Access Token',
-            'created_at' => 'Created At',
-            'device_name' => 'Device Name',
-            'device_os_version' => 'Device Os Version',
-            'device_type' => 'Device Type',
-            'app_version' => 'App Version',
-            'device_id' => 'Device ID',
             'is_deleted' => 'Is Deleted',
+            'created_at' => 'Created At',
         ];
     }
+
 
     public static function findIdentity($id)
     {

@@ -12,28 +12,19 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <div class="row">
-        <div class="col-md-6">
-            <?= $form->field($model, 'first_name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'profile_pic')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?>.
-        </div>
-        <div class="col-md-6">
-            <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'is_deleted')->textInput() ?>
 
-            <?= $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
-
-            <?= $form->field($model, 'dob')->textInput() ?>
-        </div>
-    </div>
-
+    <?= $form->field($model, 'created_at')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

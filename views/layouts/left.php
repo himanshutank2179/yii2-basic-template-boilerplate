@@ -3,8 +3,8 @@
     <section class="sidebar">
 
         <?php
-        $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
-        $role = array_keys($current_user_roles)[0];
+       // $current_user_roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+        //$role = array_keys($current_user_roles)[0];
         ?>
 
         <?= dmstr\widgets\Menu::widget(
@@ -15,7 +15,7 @@
                     ['label' => 'DashBoard', 'icon' => 'dashboard', 'url' => ['/dashboard/index']],
 
 
-                    ['label' => 'Users', 'url' => ['/users/index'], 'visible' => $role == 'Super Admin' ? true : false],
+                    //['label' => 'Users', 'url' => ['/users/index'], 'visible' => $role == 'Super Admin' ? true : false],
                     [
                         'label' => 'RBAC',
                         'icon' => '  fa-mail-forward (alias)',
@@ -28,7 +28,7 @@
                             ['label' => 'Assignments', 'icon' => '', 'url' => ['/admin/assignment']],
 
                         ],
-                        'visible' => $role == 'Super Admin' ? true : false
+                        //'visible' => $role == 'Super Admin' ? true : false
                     ],
                     // [
                     //     'label' => 'Some tools',

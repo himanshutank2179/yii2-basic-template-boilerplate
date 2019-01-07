@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=daily_lottery',
+    'dsn' => 'mysql:host=localhost;dbname=alexa',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',
