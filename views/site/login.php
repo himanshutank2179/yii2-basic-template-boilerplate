@@ -22,7 +22,7 @@ $fieldOptions2 = [
 
 <div class="login-box">
     <div class="login-logo">
-        <a href="#"><b>Daily Lottery</b></a>
+        <a href="#"><b>Alexa</b></a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">

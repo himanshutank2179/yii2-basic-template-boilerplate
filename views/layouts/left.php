@@ -13,30 +13,8 @@
                 'items' => [
                     ['label' => 'Menu', 'options' => ['class' => 'header']],
                     ['label' => 'DashBoard', 'icon' => 'dashboard', 'url' => ['/dashboard/index']],
-                    [
-                        'label' => 'Location',
-                        'icon' => 'location',
-                        'url' => '#',
-                        'items' => [
-                            [
-                                'label' => 'Location Add',
-                                'icon' => 'dashboard',
-                                'url' => ['/location/create'],
-                            ],
-                            ['label' => 'Location Manage', 'icon' => 'dashboard', 'url' => ['/location/index']],
-                        ],
-                        'visible' => $role == 'Super Admin' ? true : false
-                    ],
-                    [
-                        'label' => 'Number',
-                        'icon' => 'digit',
-                        'url' => '#',
-                        'items' => [
-                            ['label' => 'Add Number', 'icon' => 'dashboard', 'url' => ['/ticket-values/create']],
-                            ['label' => 'Manage Number', 'icon' => 'dashboard', 'url' => ['/ticket-values/index']],
-                        ],
-                        'visible' => $role == 'Super Admin' ? true : false
-                    ],
+
+
                     ['label' => 'Users', 'url' => ['/users/index'], 'visible' => $role == 'Super Admin' ? true : false],
                     [
                         'label' => 'RBAC',
